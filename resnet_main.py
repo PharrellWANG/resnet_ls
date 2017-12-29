@@ -69,7 +69,7 @@ def train(hps):
   precision = tf.reduce_mean(tf.to_float(tf.equal(predictions, truth)))
 
   summary_hook = tf.train.SummarySaverHook(
-      save_steps=100,
+      save_steps=10,
       output_dir=FLAGS.train_dir,
       summary_op=tf.summary.merge([model.summaries,
                                    tf.summary.scalar('Precision', precision)]))
@@ -145,7 +145,7 @@ def evaluate(hps):
   # best_precision = 0.0
   # tf.global_variables_initializer()
   while True:
-    print('=======her ewe go----2')
+    # print('=======her ewe go----2')
     try:
       ckpt_state = tf.train.get_checkpoint_state(FLAGS.log_root)
     except tf.errors.OutOfRangeError as e:
@@ -155,28 +155,33 @@ def evaluate(hps):
       tf.logging.info('No model to eval yet at %s', FLAGS.log_root)
       continue
     tf.logging.info('Loading checkpoint %s', ckpt_state.model_checkpoint_path)
-    print('=======her ewe go----2-1')
+    # print('=======her ewe go----2-1')
     saver.restore(sess, ckpt_state.model_checkpoint_path)
-    print('=======her ewe go----2-2')
+    # print('=======her ewe go----2-2')
 
     total_prediction, correct_prediction = 0, 0
-    print('=======her ewe go----3')
-    print('=======her ewe go----4')
+    # print('=======her ewe go----3')
+    # print('=======her ewe go----4')
+    bc_cnt = 0
     for _ in six.moves.range(FLAGS.eval_batch_count):
+      bc_cnt += 1
+      sys.stdout.write(
+        '\r>> processing batch: %d / %d' %
+        (bc_cnt, FLAGS.eval_batch_count))
       
       # sess.run(tf.local_variables_initializer())
       # use this only has error:
       # sess.run(tf.global_variables_initializer())
-      print('=======her ewe go----5')
+      # print('=======her ewe go----5')
       (summaries, loss, predictions, truth, train_step) = sess.run(
           [model.summaries, model.cost, model.predictions,
            model.labels, model.global_step])
-      print('=======her ewe go----6')
+      # print('=======her ewe go----6')
       truth = np.argmax(truth, axis=1)
       predictions = np.argmax(predictions, axis=1)
       correct_prediction += np.sum(truth == predictions)
       total_prediction += predictions.shape[0]
-      print('=======her ewe go----7')
+      # print('=======her ewe go----7')
 
     precision = 1.0 * correct_prediction / total_prediction
     best_precision = max(precision, best_precision)

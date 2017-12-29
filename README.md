@@ -95,13 +95,15 @@ $ tensorboard --logdir=/tmp/resnet_model
 # Evaluate the model.
 # Avoid running on the same GPU as the training job at the same time,
 # otherwise, you might run out of memory.
-$ bazel-bin/resnet/resnet_main --eval_data_path=cifar10/test_batch.bin \
+$ bazel-bin/research/resnet/resnet_main --eval_data_path=cifar10/test_batch.bin \
                                --log_root=/tmp/resnet_model \
                                --eval_dir=/tmp/resnet_model/test \
                                --mode=eval \
                                --dataset='cifar10' \
                                --num_gpus=0
 ```
+
+# liangshu
 
 ### quick memo (lsdata)
 
@@ -110,7 +112,7 @@ $ bazel-bin/resnet/resnet_main --eval_data_path=cifar10/test_batch.bin \
 $ bazel build -c opt --config=cuda research/resnet/...
 
 # Train the model.
-$ bazel-bin/research/resnet/resnet_main --train_data_path="/Users/Pharrell_WANG/lsdata/input_for_classify/*.JPEG" \
+$ bazel-bin/research/resnet/resnet_main --train_data_path="/Users/Pharrell_WANG/next-workspace/models/research/resnet/lsdata/bin/train.bin" \
                                --log_root=/tmp/resnet_model_for_lsdata \
                                --train_dir=/tmp/resnet_model_for_lsdata/train \
                                --dataset='lsdata' \
@@ -119,10 +121,23 @@ $ bazel-bin/research/resnet/resnet_main --train_data_path="/Users/Pharrell_WANG/
 # Evaluate the model.
 # Avoid running on the same GPU as the training job at the same time,
 # otherwise, you might run out of memory.
-$ bazel-bin/research/resnet/resnet_main --eval_data_path="/Users/Pharrell_WANG/lsdata/input_for_classify_test/*.JPEG" \
+$ bazel-bin/research/resnet/resnet_main --eval_data_path="/Users/Pharrell_WANG/next-workspace/models/research/resnet/lsdata/bin/test.bin" \
                                --log_root=/tmp/resnet_model_for_lsdata \
                                --eval_dir=/tmp/resnet_model_for_lsdata/test \
                                --mode=eval \
                                --dataset='lsdata' \
                                --num_gpus=0                               
 ```
+
+
+
+### note
+
+1. count bytes: (wc: word count)
+``wc -c < lsdata/lsdata_train.bin
+``
+
+### data processing:
+
+step 1. use `z_label_gen.py`
+step 2. use `z_bin_gen.py` Ref:[How to create dataset similar to cifar10](https://stackoverflow.com/questions/35032675/how-to-create-dataset-similar-to-cifar-10/35034287)
