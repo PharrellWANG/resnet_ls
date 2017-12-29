@@ -83,7 +83,7 @@ BUILD  cifar_input.py  g3doc  README.md  resnet_main.py  resnet_model.py
 $ bazel build -c opt --config=cuda resnet/...
 
 # Train the model.
-$ bazel-bin/resnet/resnet_main --train_data_path=cifar10/data_batch* \
+$ bazel-bin/research/resnet/resnet_main --train_data_path="cifar10/data_batch*" \
                                --log_root=/tmp/resnet_model \
                                --train_dir=/tmp/resnet_model/train \
                                --dataset='cifar10' \

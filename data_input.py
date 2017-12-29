@@ -18,6 +18,7 @@
 
 import tensorflow as tf
 
+
 def build_input(dataset, data_path, batch_size, mode):
   """Build CIFAR image and labels.
 
@@ -32,12 +33,14 @@ def build_input(dataset, data_path, batch_size, mode):
   Raises:
     ValueError: when the specified dataset is not supported.
   """
-  image_size = 32
+  # image_size = 32
   if dataset == 'cifar10':
+    image_size = 32
     label_bytes = 1
     label_offset = 0
     num_classes = 10
   elif dataset == 'cifar100':
+    image_size = 32
     label_bytes = 1
     label_offset = 1
     num_classes = 100
@@ -61,6 +64,7 @@ def build_input(dataset, data_path, batch_size, mode):
   depth_major = tf.reshape(tf.slice(record, [label_offset + label_bytes], [image_bytes]),
                            [depth, image_size, image_size])
   # Convert from [depth, height, width] to [height, width, depth].
+  #  (256, 400, 1)
   image = tf.cast(tf.transpose(depth_major, [1, 2, 0]), tf.float32)
 
   if mode == 'train':

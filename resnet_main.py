@@ -19,7 +19,7 @@ import time
 import six
 import sys
 
-import cifar_input
+import data_input
 import numpy as np
 import resnet_model
 import tensorflow as tf
@@ -49,7 +49,7 @@ tf.app.flags.DEFINE_integer('num_gpus', 0,
 
 def train(hps):
   """Training loop."""
-  images, labels = cifar_input.build_input(
+  images, labels = data_input.build_input(
       FLAGS.dataset, FLAGS.train_data_path, hps.batch_size, FLAGS.mode)
   model = resnet_model.ResNet(hps, images, labels, FLAGS.mode)
   model.build_graph()
@@ -116,7 +116,7 @@ def train(hps):
 
 def evaluate(hps):
   """Eval loop."""
-  images, labels = cifar_input.build_input(
+  images, labels = data_input.build_input(
       FLAGS.dataset, FLAGS.eval_data_path, hps.batch_size, FLAGS.mode)
   model = resnet_model.ResNet(hps, images, labels, FLAGS.mode)
   model.build_graph()
