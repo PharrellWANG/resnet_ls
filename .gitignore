@@ -167,7 +167,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-.idea/vcs.xml
+.idea/
 24benign.JPEG
 a_relic/24benignJPEG.bin
 lsdata/
