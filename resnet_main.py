@@ -25,13 +25,13 @@ import resnet_model
 import tensorflow as tf
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('dataset', 'cifar10', 'cifar10 or cifar100.')
+tf.app.flags.DEFINE_string('dataset', 'lsdata', 'cifar10 or cifar100 or lsdata.')
 tf.app.flags.DEFINE_string('mode', 'train', 'train or eval.')
 tf.app.flags.DEFINE_string('train_data_path', '',
                            'Filepattern for training data.')
 tf.app.flags.DEFINE_string('eval_data_path', '',
                            'Filepattern for eval data')
-tf.app.flags.DEFINE_integer('image_size', 32, 'Image side length.')
+# tf.app.flags.DEFINE_integer('image_size', 32, 'Image side length.')
 tf.app.flags.DEFINE_string('train_dir', '',
                            'Directory to keep training outputs.')
 tf.app.flags.DEFINE_string('eval_dir', '',
@@ -180,15 +180,21 @@ def main(_):
   else:
     raise ValueError('Only support 0 or 1 gpu.')
 
-  if FLAGS.mode == 'train':
+  if FLAGS.mode == 'train' and FLAGS.dataset != 'lsdata':
     batch_size = 128
-  elif FLAGS.mode == 'eval':
+  # elif FLAGS.mode == 'eval':
+  elif FLAGS.mode == 'train' and FLAGS.dataset == 'lsdata':
+    batch_size = 30
+  else:  # >> must be eval
     batch_size = 100
 
   if FLAGS.dataset == 'cifar10':
     num_classes = 10
   elif FLAGS.dataset == 'cifar100':
     num_classes = 100
+  # elif FLAGS.dataset == 'lsdata':
+  else:  # >> must be lsdata
+    num_classes = 2
 
   hps = resnet_model.HParams(batch_size=batch_size,
                              num_classes=num_classes,

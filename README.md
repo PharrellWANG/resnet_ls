@@ -102,3 +102,17 @@ $ bazel-bin/resnet/resnet_main --eval_data_path=cifar10/test_batch.bin \
                                --dataset='cifar10' \
                                --num_gpus=0
 ```
+
+### quick memo (lsdata)
+
+```shell
+# Build everything for GPU.
+$ bazel build -c opt --config=cuda research/resnet/...
+
+# Train the model.
+$ bazel-bin/research/resnet/resnet_main --train_data_path="/Users/Pharrell_WANG/lsdata/input_for_classify/*.JPEG" \
+                               --log_root=/tmp/resnet_model_for_lsdata \
+                               --train_dir=/tmp/resnet_model_for_lsdata/train \
+                               --dataset='lsdata' \
+                               --num_gpus=1
+```

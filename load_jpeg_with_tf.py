@@ -1,3 +1,6 @@
+# >> pha.zx: this file is used to make experiments on how to load jpeg in tf,
+# and how to get label according to file names.
+
 # Typical setup to include TensorFlow.
 import tensorflow as tf
 import os
