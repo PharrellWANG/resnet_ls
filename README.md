@@ -115,4 +115,14 @@ $ bazel-bin/research/resnet/resnet_main --train_data_path="/Users/Pharrell_WANG/
                                --train_dir=/tmp/resnet_model_for_lsdata/train \
                                --dataset='lsdata' \
                                --num_gpus=1
+                               
+# Evaluate the model.
+# Avoid running on the same GPU as the training job at the same time,
+# otherwise, you might run out of memory.
+$ bazel-bin/research/resnet/resnet_main --eval_data_path="/Users/Pharrell_WANG/lsdata/input_for_classify_test/*.JPEG" \
+                               --log_root=/tmp/resnet_model_for_lsdata \
+                               --eval_dir=/tmp/resnet_model_for_lsdata/test \
+                               --mode=eval \
+                               --dataset='lsdata' \
+                               --num_gpus=0                               
 ```

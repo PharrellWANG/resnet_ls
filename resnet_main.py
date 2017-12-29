@@ -36,9 +36,9 @@ tf.app.flags.DEFINE_string('train_dir', '',
                            'Directory to keep training outputs.')
 tf.app.flags.DEFINE_string('eval_dir', '',
                            'Directory to keep eval outputs.')
-tf.app.flags.DEFINE_integer('eval_batch_count', 50,
+tf.app.flags.DEFINE_integer('eval_batch_count', 10,
                             'Number of batches to eval.')
-tf.app.flags.DEFINE_bool('eval_once', False,
+tf.app.flags.DEFINE_bool('eval_once', True,
                          'Whether evaluate the model only once.')
 tf.app.flags.DEFINE_string('log_root', '',
                            'Directory to keep the checkpoints. Should be a '
@@ -122,12 +122,30 @@ def evaluate(hps):
   model.build_graph()
   saver = tf.train.Saver()
   summary_writer = tf.summary.FileWriter(FLAGS.eval_dir)
+  config = tf.ConfigProto(
+    device_count={'GPU': 0}
+  )
+  sess = tf.Session(config=config)
 
-  sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
+  # sess.run(tf.local_variables_initializer())
+  # init = tf.global_variables_initializer()
+  # sess = tf.Session()
+  # sess.run(init)
   tf.train.start_queue_runners(sess)
 
   best_precision = 0.0
+  # model.build_graph()
+  # saver = tf.train.Saver()
+  # summary_writer = tf.summary.FileWriter(FLAGS.eval_dir)
+  #
+  # sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
+  # tf.train.start_queue_runners(sess)
+  # print('=======her ewe go----1')
+  #
+  # best_precision = 0.0
+  # tf.global_variables_initializer()
   while True:
+    print('=======her ewe go----2')
     try:
       ckpt_state = tf.train.get_checkpoint_state(FLAGS.log_root)
     except tf.errors.OutOfRangeError as e:
@@ -137,18 +155,28 @@ def evaluate(hps):
       tf.logging.info('No model to eval yet at %s', FLAGS.log_root)
       continue
     tf.logging.info('Loading checkpoint %s', ckpt_state.model_checkpoint_path)
+    print('=======her ewe go----2-1')
     saver.restore(sess, ckpt_state.model_checkpoint_path)
+    print('=======her ewe go----2-2')
 
     total_prediction, correct_prediction = 0, 0
+    print('=======her ewe go----3')
+    print('=======her ewe go----4')
     for _ in six.moves.range(FLAGS.eval_batch_count):
+      
+      # sess.run(tf.local_variables_initializer())
+      # use this only has error:
+      # sess.run(tf.global_variables_initializer())
+      print('=======her ewe go----5')
       (summaries, loss, predictions, truth, train_step) = sess.run(
           [model.summaries, model.cost, model.predictions,
            model.labels, model.global_step])
-
+      print('=======her ewe go----6')
       truth = np.argmax(truth, axis=1)
       predictions = np.argmax(predictions, axis=1)
       correct_prediction += np.sum(truth == predictions)
       total_prediction += predictions.shape[0]
+      print('=======her ewe go----7')
 
     precision = 1.0 * correct_prediction / total_prediction
     best_precision = max(precision, best_precision)
@@ -185,6 +213,8 @@ def main(_):
   # elif FLAGS.mode == 'eval':
   elif FLAGS.mode == 'train' and FLAGS.dataset == 'lsdata':
     batch_size = 30
+  elif FLAGS.mode == 'eval' and FLAGS.dataset == 'lsdata':
+    batch_size = 10
   else:  # >> must be eval
     batch_size = 100
 

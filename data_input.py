@@ -166,8 +166,8 @@ def build_input(dataset, data_path, batch_size, mode):
       image = tf.image.per_image_standardization(image)
   
       example_queue = tf.RandomShuffleQueue(
-          capacity=1 * batch_size,
-          min_after_dequeue=1 * batch_size,
+          capacity=4 * batch_size,
+          min_after_dequeue=2 * batch_size,
           dtypes=[tf.float32, tf.int32],
           shapes=[[image_height, image_width, depth], [1]])
       num_threads = 16
@@ -177,7 +177,7 @@ def build_input(dataset, data_path, batch_size, mode):
       image = tf.image.per_image_standardization(image)
   
       example_queue = tf.FIFOQueue(
-          1 * batch_size,
+          2 * batch_size,
           dtypes=[tf.float32, tf.int32],
           shapes=[[image_height, image_width, depth], [1]])
       num_threads = 1
